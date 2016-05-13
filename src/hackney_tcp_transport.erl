@@ -34,7 +34,12 @@ connect(Host, Port, Opts, Timeout) when is_list(Host), is_integer(Port),
     Opts1 = hackney_util:filter_options(Opts, AcceptedOpts, BaseOpts),
 
     %% connect
-	gen_tcp:connect(Host, Port, Opts1, Timeout).
+
+    {ElapsedTime, Res} = timer:tc(fun() ->
+        gen_tcp:connect(Host, Port, Opts1, Timeout)
+    end),
+    chokecherry:info("log_time msisdn_resolver hackney tcp_connect time:~p", [ElapsedTime]),
+    Res.
 
 recv(Socket, Length) ->
     recv(Socket, Length, infinity).
@@ -44,8 +49,11 @@ recv(Socket, Length) ->
 -spec recv(inet:socket(), non_neg_integer(), timeout())
 	-> {ok, any()} | {error, closed | atom()}.
 recv(Socket, Length, Timeout) ->
-	gen_tcp:recv(Socket, Length, Timeout).
-
+    {ElapsedTime, Res} = timer:tc(fun() ->
+         gen_tcp:recv(Socket, Length, Timeout)
+    end),
+    chokecherry:info("log_time msisdn_resolver hackney tcp_recv time:~p", [ElapsedTime]),
+    Res.
 
 %% @doc Send a packet on a socket.
 %% @see gen_tcp:send/2
