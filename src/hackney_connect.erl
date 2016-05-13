@@ -246,6 +246,8 @@ do_connect(Host, Port, Transport, #client{mod_metrics=Metrics,
         {ok, Skt} ->
             ?report_trace("new connection", []),
             ConnectTime = timer:now_diff(os:timestamp(), Begin)/1000,
+
+            chokecherry:info("log_time def_resolver hackney connect time:~p", [ConnectTime]),
             metrics:update_histogram(Metrics, [hackney, Host, connect_time], ConnectTime),
             metrics:increment_counter(Metrics, [hackney_pool, Host, new_connection]),
             Client1 = Client#client{socket=Skt,

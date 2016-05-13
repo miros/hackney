@@ -120,6 +120,7 @@ wait_headers({header, {Key, Value}=KV, Parser}, Client, Status, Headers) ->
 wait_headers({headers_complete, Parser}, Client, Status, Headers) ->
     ResponseTime = timer:now_diff(os:timestamp(),
                                   Client#client.start_time)/1000,
+    chokecherry:info("log_time def_resolver hackney response time:~p", [ResponseTime]),
     metrics:update_histogram(Client#client.mod_metrics,
                              [hackney, Client#client.host, response_time],
                              ResponseTime),

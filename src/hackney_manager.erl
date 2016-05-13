@@ -598,6 +598,7 @@ start_request(#request_info{host=Host}, #mstate{metrics=Engine}) ->
 finish_request(#request_info{start_time=Begin, host=Host},
                #mstate{metrics=Engine}) ->
     RequestTime = timer:now_diff(os:timestamp(), Begin)/1000,
+    chokecherry:info("log_time def_resolver hackney request time:~p", [RequestTime]),
     metrics:update_histogram(Engine, [hackney, Host, request_time], RequestTime),
     metrics:decrement_counter(Engine, [hackney, Host, nb_requests]),
     metrics:decrement_counter(Engine, [hackney, nb_requests]),
