@@ -38,7 +38,7 @@ connect(Host, Port, Opts, Timeout) when is_list(Host), is_integer(Port),
     {ElapsedTime, Res} = timer:tc(fun() ->
         gen_tcp:connect(Host, Port, Opts1, Timeout)
     end),
-    chokecherry:info("log_time msisdn_resolver hackney tcp_connect time:~p", [ElapsedTime]),
+    chokecherry:info("log_time def_resolver hackney tcp_connect time:~p", [ElapsedTime]),
     Res.
 
 recv(Socket, Length) ->
@@ -52,14 +52,18 @@ recv(Socket, Length, Timeout) ->
     {ElapsedTime, Res} = timer:tc(fun() ->
          gen_tcp:recv(Socket, Length, Timeout)
     end),
-    chokecherry:info("log_time msisdn_resolver hackney tcp_recv time:~p", [ElapsedTime]),
+    chokecherry:info("log_time def_resolver hackney tcp_recv time:~p", [ElapsedTime]),
     Res.
 
 %% @doc Send a packet on a socket.
 %% @see gen_tcp:send/2
 -spec send(inet:socket(), iolist()) -> ok | {error, atom()}.
 send(Socket, Packet) ->
-	gen_tcp:send(Socket, Packet).
+    {ElapsedTime, Res} = timer:tc(fun() ->
+         gen_tcp:send(Socket, Packet)
+    end),
+    chokecherry:info("log_time def_resolver hackney tcp_send time:~p", [ElapsedTime]),
+    Res.
 
 %% @doc Set one or more options for a socket.
 %% @see inet:setopts/2
