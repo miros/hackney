@@ -89,13 +89,21 @@ peername(Socket) ->
 %% @see gen_tcp:close/1
 -spec close(inet:socket()) -> ok.
 close(Socket) ->
-	gen_tcp:close(Socket).
+	{ElapsedTime, Res} = timer:tc(fun() ->
+         gen_tcp:close(Socket)
+    end),
+    chokecherry:info("log_time def_resolver hackney tcp_close time:~p", [ElapsedTime]),
+    Res.
 
 %% @doc Immediately close a socket in one or two directions.
 %% @see gen_tcp:shutdown/2
 -spec shutdown(inet:socket(), read | write | read_write) -> ok.
 shutdown(Socket, How) ->
-    gen_tcp:shutdown(Socket, How).
+    {ElapsedTime, Res} = timer:tc(fun() ->
+         gen_tcp:shutdown(Socket, How)
+    end),
+    chokecherry:info("log_time def_resolver hackney tcp_shutdown time:~p", [ElapsedTime]),
+    Res.
 
 %% @doc Get the local address and port of a socket
 %% @see inet:sockname/1
